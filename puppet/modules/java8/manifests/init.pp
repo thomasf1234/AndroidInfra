@@ -17,8 +17,12 @@ class java8 {
   }
 
   exec { 'update environment variables':
-    environment => ["JAVA_HOME=/usr/lib/jvm/java-8-oracle"],
-    command => '/bin/echo $FOO > /tmp/bar',
+    command => '/bin/echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment',
     require => Package['oracle-java8-installer']
+  }
+  
+  exec { 'reload environment variables':
+    command => 'source /etc/environment',
+    require => Exec['update environment variables'] 
   }
 }
