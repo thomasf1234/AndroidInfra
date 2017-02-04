@@ -6,7 +6,7 @@ class java8 {
   file {'license-seeds':
     path => "/tmp/oracle-java-license.seeds",
     source => 'puppet:///modules/java8/oracle-java-license.seeds',
-    ensure => 'present',
+    ensure => present,
     require => Exec['apt-update']
   }
 
