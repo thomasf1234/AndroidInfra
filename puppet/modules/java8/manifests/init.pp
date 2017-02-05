@@ -1,6 +1,8 @@
 class java8 {
+  Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] }
+  
   exec { "apt_update_for_java8":
-    command => "/usr/bin/apt-get update"
+    command => "apt-get update"
   }
 
   file {'license-seeds':
@@ -17,8 +19,8 @@ class java8 {
   }
 
   exec { 'update environment variables':
-    command => '/bin/echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment',
-    unless => '/bin/grep JAVA_HOME /etc/environment 2>/dev/null',
+    command => 'echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment',
+    unless => 'grep JAVA_HOME /etc/environment 2>/dev/null',
     require => Package['oracle-java8-installer']
   }
 }

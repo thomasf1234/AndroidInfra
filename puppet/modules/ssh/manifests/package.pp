@@ -1,6 +1,8 @@
 class ssh::package {
+  Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] }
+  
   exec { "apt_update_for_ssh_package":
-    command => "/usr/bin/apt-get update"
+    command => "apt-get update"
   }
   
   package {'openssh-server':

@@ -1,6 +1,8 @@
 include git
 include java8
 include ssh::package
+include ruby
+include android
 
 users::user {'qa_user':
   username => 'qa'
