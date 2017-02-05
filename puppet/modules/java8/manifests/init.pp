@@ -1,8 +1,13 @@
 class java8 {
   Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] }
   
+  exec { 'add_repo_for_java8':
+    command => 'add-apt-repository ppa:webupd8team/java'
+  }
+  
   exec { "apt_update_for_java8":
-    command => "apt-get update"
+    command => "apt-get update",
+    require => Exec['add_repo_for_java8']
   }
 
   file {'license-seeds':
