@@ -12,3 +12,4 @@ set -e
 /usr/bin/apt-get update
 /usr/bin/apt-get --yes install puppet-agent
 
+#sudo /opt/puppetlabs/bin/puppet apply --verbose --modulepath=puppet/modules puppet/manifests/test.pp

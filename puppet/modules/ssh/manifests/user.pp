@@ -1,17 +1,18 @@
-define ssh::user ($user) {
+define ssh::user ($username) {
   file { ".ssh":
-    path => "/home/${user}/.ssh",
+    path => "/home/${username}/.ssh",
     ensure => directory,
-    owner  => "${user}",
-    group  => "${user}",
+    owner  => "${username}",
+    group  => "${username}",
     mode => '700'
   }
   
   file { "authorized_keys":
-    path => "/home/${user}/.ssh/authorized_keys",
+    path => "/home/${username}/.ssh/authorized_keys",
     ensure => file,
-    owner  => "${user}",
-    group  => "${user}",
+    source => 'puppet:///modules/ssh/id_rsa_virtual_box.pub',
+    owner  => "${username}",
+    group  => "${username}",
     require => File[".ssh"]
   }
 }

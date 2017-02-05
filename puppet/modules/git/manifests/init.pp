@@ -1,10 +1,10 @@
 class git {
-  exec { "apt-update":
+  exec { "apt_update_for_git":
     command => "/usr/bin/apt-get update"
   }
   
   package {'git':
     ensure => installed,
-    require => Exec['apt-update']
+    require => Exec['apt_update_for_git']
   }
 }
