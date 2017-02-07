@@ -13,20 +13,20 @@ class Port
     free = false
 
     begin
-      sock = nil
+      socket = nil
 
       Timeout::timeout(DEFAULT_TIMEOUT) do
-        sock = Socket.new(:INET, :STREAM)
+        socket = Socket.new(:INET, :STREAM)
         sockaddr = Socket.sockaddr_in(@number, LOCALHOST)
-        if sock.bind(sockaddr)
+        if socket.bind(sockaddr)
           free = true
         end
       end
     rescue Errno::EADDRINUSE, Errno::ETIMEDOUT, Timeout::Error
     ensure
-      if !sock.nil?
-        if !sock.closed?
-          sock.close
+      if !socket.nil?
+        if !socket.closed?
+          socket.close
         end
       end
     end
