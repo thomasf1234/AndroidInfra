@@ -9,6 +9,9 @@ puts apk.inspect
 #emulator.install(remote_path)
 emulator.force_stop(apk.package)
 emulator.uninstall(apk.package)
+
+puts Device.allowed_ports.map(&:free?)
+System.instance.start_emulator('Nexus_5_API_5')
 puts "exiting"
 
 # log = LogFile.new('System')

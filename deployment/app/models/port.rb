@@ -5,6 +5,8 @@ class Port
   LOCALHOST = '127.0.0.1'
   DEFAULT_TIMEOUT = 5
 
+  attr_reader :number
+
   def initialize(number)
     @number = number
   end

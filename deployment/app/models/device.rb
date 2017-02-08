@@ -5,8 +5,9 @@ class Device
   ANDROID_TMP_DIR = '/data/local/tmp/'
   attr_reader :avd_name, :serial_number, :uuid
 
+  @allowed_ports = (5554..5584).step(2).to_a.map { |number| Port.new(number) }
   def self.allowed_ports
-    (5554..5584).step(2).to_a
+    @allowed_ports
   end
 
   def initialize(avd_name, serial_number, port)

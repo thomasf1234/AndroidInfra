@@ -18,48 +18,49 @@ class System
     @terminal
   end
 
-  def copy_to(device, apk, destination='/data/local/tmp/')
-    @terminal.adb("push $#{apk.path} #{File.join(destination, apk.package)}")
+  def deploy(apk, device)
+    remote_path = device.push(apk)
+    device.install(remote_path)
   end
 
-  def start_emulator(avd)
-    device_uuid = SecureRandom.uuid
+  def start_emulator(avd_name)
+    Logger.instance.log("#Starting emulator")
+    port = Device.allowed_ports.detect(&:free?)
 
-    @terminal.log.puts("#Starting emulator")
-    @terminal.emulator("-no-boot-anim -shell -netdelay none -netspeed full -prop emu.uuid=#{device_uuid} -avd #{avd} > #{avd}.log &")
+    if port.nil?
+      raise "No free ports available"
+    else
+      terminal.emulator("-no-boot-anim -shell -netdelay none -netspeed full -port #{port.number} -avd #{avd_name} > #{avd_name}.log &")
 
-    @terminal.log.puts("#finding serial number for uuid '#{device_uuid}'")
-    android_serial = retry_block(5, 10) do
-      android_serials = @terminal.adb("devices").scan(ANDROID_SERIAL_IDENTIFIER_REGEX)
+      Logger.instance.log("#waiting for device to boot")
+      android_serial = retry_block(5, 10) do
+        android_serials = @terminal.adb("devices").scan(ANDROID_SERIAL_IDENTIFIER_REGEX)
 
-      if(android_serials.empty?)
-        @terminal.log.puts("raising: No device not found")
-        raise 'No device not found'
-      else
-        android_serial = android_serials.detect do |android_serial|
-          arbitrary_device_uuid = @terminal.adb("-s #{android_serial} shell getprop emu.uuid")
-          arbitrary_device_uuid == device_uuid
-        end
-
-        if android_serial.nil?
-          @terminal.log.puts("raising: Device with uuid '#{device_uuid}' not found")
-          raise "Device with uuid '#{device_uuid}' not found"
+        if(android_serials.empty?)
+          @terminal.log.puts("raising: No device not found")
+          raise 'No device not found'
         else
-          android_serial
+          android_serial = android_serials.detect do |android_serial|
+            !android_serial.match(/#{port.number}/).nil?
+          end
+
+          if android_serial.nil?
+            Logger.instance.log("raising: Device with port '#{port.number}' not found")
+            raise "Device with port '#{port.number}' not found"
+          else
+            android_serial
+          end
         end
       end
     end
 
-    require 'pry'; binding.pry
-
-
     device_booted = false
     until (device_booted)
-      device_booted = @terminal.adb("-s #{android_serial} shell getprop sys.boot_completed").include?(DEVICE_BOOTED_IDENTIFIER)
+      device_booted = terminal.adb("-s #{android_serial} shell getprop sys.boot_completed").include?(DEVICE_BOOTED_IDENTIFIER)
       wait(1)
     end
 
-    Device.new(avd, android_serial, device_uuid)
+    Device.new(avd_name, android_serial, port)
   end
 
   private
