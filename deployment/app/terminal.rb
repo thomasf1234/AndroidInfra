@@ -2,11 +2,11 @@ require_relative 'logger'
 require_relative '../../deployment/lib/utils'
 
 class Terminal
+  ANDROID_SDK_HOME_KEY = 'ANDROID_SDK_HOME'
   EXIT_STATUS_SUCCESS = 0
   DEFAULT_TIMEOUT_SECONDS = 30*60
 
-  def initialize(android_sdk_home, stubbed=false)
-    @android_sdk_home = android_sdk_home
+  def initialize(stubbed=false)
     @stubbed = stubbed
     @latest_build_tools_version = find_latest_build_tools_version
   end
@@ -20,7 +20,7 @@ class Terminal
   end
 
   def execute(command, timeout=DEFAULT_TIMEOUT_SECONDS)
-    # System.instance.logger.log("executing: '#{command}'")
+    Logger.instance.log("executing: '#{command}'")
     formatted_command = timeout_cmd(command, timeout)
     return_value = sh(formatted_command)
     exit_status = $?
@@ -29,15 +29,15 @@ class Terminal
   end
 
   def adb(command)
-    execute("#{File.join(@android_sdk_home, 'platform-tools/adb')} #{command}")
+    execute("#{File.join(ENV[ANDROID_SDK_HOME_KEY], 'platform-tools/adb')} #{command}")
   end
 
   def emulator(command)
-    execute("#{File.join(@android_sdk_home, 'tools/emulator')} #{command}")
+    execute("#{File.join(ENV[ANDROID_SDK_HOME_KEY], 'tools/emulator')} #{command}")
   end
 
   def aapt(command)
-    execute("#{File.join(@android_sdk_home, "build-tools/#{@latest_build_tools_version}/aapt")} #{command}")
+    execute("#{File.join(ENV[ANDROID_SDK_HOME_KEY], "build-tools/#{@latest_build_tools_version}/aapt")} #{command}")
   end
 
   private
@@ -58,7 +58,7 @@ class Terminal
     if stubbed?
       return '25.0.1'
     else
-      versions = execute("ls #{File.join(@android_sdk_home, 'build-tools')}").split("\n")
+      versions = execute("ls #{File.join(ENV[ANDROID_SDK_HOME_KEY], 'build-tools')}").split("\n")
       return Utils.latest_version(versions)
     end
   end

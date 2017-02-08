@@ -1,6 +1,6 @@
 require 'singleton'
 require 'securerandom'
-# require_relative 'device'
+require_relative 'device'
 require_relative '../../lib/log_file'
 require_relative '../terminal'
 
@@ -11,16 +11,11 @@ class System
   DEVICE_BOOTED_IDENTIFIER = '1'
 
   def initialize
-    @terminal = Terminal.new(ENV['ANDROID_SDK_HOME'])
-    @logger = Logger.new
+    @terminal = Terminal.new
   end
 
   def terminal
     @terminal
-  end
-
-  def logger
-    @logger
   end
 
   def copy_to(device, apk, destination='/data/local/tmp/')
