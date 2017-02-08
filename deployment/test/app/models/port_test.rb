@@ -1,5 +1,5 @@
 require 'test/unit'
-require_relative '../../../deployment/app/models/port'
+require_relative '../../../../deployment/app/models/port'
 
 class PortTest < Test::Unit::TestCase
 
