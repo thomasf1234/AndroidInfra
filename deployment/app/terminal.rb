@@ -55,7 +55,11 @@ class Terminal
   end
 
   def find_latest_build_tools_version
-    versions = execute("ls #{File.join(@android_sdk_home, 'build-tools')}").split("\n")
-    return Utils.latest_version(versions)
+    if stubbed?
+      return '25.0.1'
+    else
+      versions = execute("ls #{File.join(@android_sdk_home, 'build-tools')}").split("\n")
+      return Utils.latest_version(versions)
+    end
   end
 end
