@@ -1,5 +1,5 @@
-require 'singleton'
 require_relative 'logger'
+require_relative '../../deployment/lib/utils'
 
 class Terminal
   EXIT_STATUS_SUCCESS = 0
@@ -8,6 +8,7 @@ class Terminal
   def initialize(android_sdk_home, stubbed=false)
     @android_sdk_home = android_sdk_home
     @stubbed = stubbed
+    @latest_build_tools_version = find_latest_build_tools_version
   end
 
   def stubbed?
@@ -19,7 +20,7 @@ class Terminal
   end
 
   def execute(command, timeout=DEFAULT_TIMEOUT_SECONDS)
-    Logger.instance.log("executing: '#{command}'")
+    # System.instance.logger.log("executing: '#{command}'")
     formatted_command = timeout_cmd(command, timeout)
     return_value = sh(formatted_command)
     exit_status = $?
@@ -35,6 +36,10 @@ class Terminal
     execute("#{File.join(@android_sdk_home, 'tools/emulator')} #{command}")
   end
 
+  def aapt(command)
+    execute("#{File.join(@android_sdk_home, "build-tools/#{@latest_build_tools_version}/aapt")} #{command}")
+  end
+
   private
   def timeout_cmd(command, duration)
     command
@@ -47,5 +52,10 @@ class Terminal
     if !stubbed?
       `#{command}`
     end
+  end
+
+  def find_latest_build_tools_version
+    versions = execute("ls #{File.join(@android_sdk_home, 'build-tools')}").split("\n")
+    return Utils.latest_version(versions)
   end
 end
