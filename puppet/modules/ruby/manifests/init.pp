@@ -9,4 +9,8 @@ class ruby {
     ensure => installed,
     require => Exec['apt_update_for_ruby']
   }
+  
+  ruby::gem {'bundler':
+    require => Package['ruby-full']
+  }
 }

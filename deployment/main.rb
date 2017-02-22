@@ -1,29 +1,12 @@
-require_relative "setup"
+#!/usr/bin/env ruby
 
-res = System.instance.terminal.aapt("dump badging deployment/test/samples/apk/test.apk")
-
-apk = Apk.new("deployment/test/samples/apk/test.apk")
-emulator = Device.new('Nexus_6_API_24', 'emulator-5554', 5554)
-puts apk.inspect
-#remote_path = emulator.push(apk)
-#emulator.install(remote_path)
-emulator.force_stop(apk.package)
-emulator.uninstall(apk.package)
-
-puts Device.allowed_ports.map(&:free?)
-System.instance.start_emulator('Nexus_5_API_5')
-puts "exiting"
-
-# log = LogFile.new('System')
-# terminal = Terminal.new(log, {'ANDROID_SDK_HOME' => '/Users/tfisher/Library/Android/sdk'})
-#
-# apk = Apk.new(terminal, "/Users/tfisher/AndroidStudioProjects/ProjectManagement/app/build/outputs/apk/app-debug-androidTest.apk")
-#
-# puts apk.path
-# puts apk.package
-# puts apk.launchable_activity
-#
-#
-# emulator = System.new(terminal).start_emulator('Nexus_6_API_23')
-# log.close
-
+case ARGV[0]
+  when "start"
+    STDOUT.puts "called start"
+  when "stop"
+    STDOUT.puts "called stop"
+  when "restart"
+    STDOUT.puts "called restart"
+  else
+    STDOUT.puts "Unknown"
+end
