@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/thomasf1234/AECCClient
-  revision: 8ed1635aeea0a86a7a82faa7002fb5799e113006
+  revision: 76d4b277f3687f3ff347cfe1bc9b39af31991530
   specs:
-    AECCClient (0.0.0)
+    aecc_client (0.0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -33,7 +33,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  AECCClient!
+  aecc_client!
   pry
   rspec
 

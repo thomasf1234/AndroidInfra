@@ -3,8 +3,9 @@ include java8
 include ssh::package
 include ruby
 #include android
-#include go::server
-#include go::agent
+include android::tools
+include go::server
+include go::agent
 
 users::user {'qa_user':
   username => 'qa'

@@ -10,7 +10,7 @@ class android::tools {
   }
   
   exec { 'download_sdk_tools':
-    command => 'curl https://dl.google.com/android/repository/tools_r25.2.3-linux.zip > /tmp/tools_r25.2.3-linux.zip',
+    command => 'wget --output-document=/tmp/tools_r25.2.3-linux.zip https://dl.google.com/android/repository/tools_r25.2.3-linux.zip',
     unless => "test -a /tmp/tools_r25.2.3-linux.zip"
   }
   

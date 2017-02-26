@@ -19,4 +19,8 @@ class android {
   class {'android::sdk24':
     require => Class['android::tools'] 
   }
+  
+  class {'android::build_tools':
+    require => Class['android::tools'] 
+  }
 }
