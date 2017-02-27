@@ -1,7 +1,7 @@
-class android::build_tools { 
+define android::build_tools($version) { 
   Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] }
   
-  exec { 'install_build_tools':
-    command => 'yes | /usr/lib/android-sdk/tools/bin/sdkmanager "build-tools;25.0.2"'
+  exec { "install_build_tools-${version}":
+    command => "yes | /usr/lib/android-sdk/tools/bin/sdkmanager \"build-tools;${version}\""
   }
 }

@@ -1,5 +1,8 @@
 class android::platform_tools { 
-  Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] }
+  Exec { 
+    environment => ["ANDROID_SDK_HOME=/usr/lib/android-sdk"],
+    path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] 
+  }
   
   exec { 'install_platform_tools':
     command => 'yes | /usr/lib/android-sdk/tools/bin/sdkmanager "platform-tools"'

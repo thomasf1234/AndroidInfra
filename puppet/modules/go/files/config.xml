@@ -2,7 +2,7 @@
 <cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="88">
   <server artifactsdir="artifacts" agentAutoRegisterKey="eb339d63-2ba5-42ce-bee8-a092af668c81" commandRepositoryLocation="default" serverId="31b87f1d-3551-4ebf-807f-663214e7a4f6" />
   <pipelines group="Lib">
-    <pipeline name="AECC" template="RubyProject">
+    <pipeline name="AECC" template="RubyPackage">
       <materials>
         <git url="https://github.com/thomasf1234/AECC.git" />
       </materials>
@@ -20,9 +20,9 @@
   </pipelines>
   <templates>
     <pipeline name="RubyProject">
-      <stage name="build">
+      <stage name="test">
         <jobs>
-          <job name="build">
+          <job name="test">
             <tasks>
               <exec command="bundle">
                 <arg>install</arg>
@@ -31,17 +31,6 @@
                 <arg>vendor/bundle</arg>
                 <runif status="passed" />
               </exec>
-            </tasks>
-            <resources>
-              <resource>standard</resource>
-            </resources>
-          </job>
-        </jobs>
-      </stage>
-      <stage name="test">
-        <jobs>
-          <job name="test">
-            <tasks>
               <exec command="bundle">
                 <arg>exec</arg>
                 <arg>rspec</arg>
@@ -51,6 +40,48 @@
             <resources>
               <resource>standard</resource>
             </resources>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="RubyPackage">
+      <stage name="Test" cleanWorkingDir="true">
+        <jobs>
+          <job name="Test">
+            <tasks>
+              <exec command="bundle">
+                <arg>install</arg>
+                <arg>--clean</arg>
+                <arg>--path</arg>
+                <arg>vendor/bundle</arg>
+              </exec>
+              <exec command="bundle">
+                <arg>exec</arg>
+                <arg>rspec</arg>
+                <arg>spec/</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <resources>
+              <resource>standard</resource>
+            </resources>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="Package" cleanWorkingDir="true">
+        <jobs>
+          <job name="Package">
+            <tasks>
+              <exec command="sh">
+                <arg>scripts/package.sh</arg>
+              </exec>
+            </tasks>
+            <resources>
+              <resource>standard</resource>
+            </resources>
+            <artifacts>
+              <artifact src="build/*-full.tgz" />
+            </artifacts>
           </job>
         </jobs>
       </stage>
